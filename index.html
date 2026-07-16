@@ -95,6 +95,7 @@
   .navcta{
     background:var(--ink); color:var(--cream); padding:10px 20px; border-radius:100px;
     font-weight:600; font-size:14px; white-space:nowrap;
+    border:none; cursor:pointer; font-family:'Inter', sans-serif;
   }
   .navcta:hover{background:var(--orange-deep); color:var(--ink);}
   .navtoggle{display:none;}
@@ -288,13 +289,51 @@
   }
   .whylist{list-style:none;}
   .whylist li{
-    display:flex; align-items:center; gap:14px;
-    padding:12px 0;
-    font-weight:600; font-size:15.5px;
     border-bottom:1px dashed var(--line);
+    transition:border-color .35s ease;
   }
   .whylist li:last-child{border-bottom:none;}
-  .whylist .ico{font-size:20px;}
+  .whylist .ico{font-size:20px; flex-shrink:0;}
+  .why-head{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 4px;
+    font-weight:600; font-size:15.5px;
+    cursor:pointer;
+    user-select:none;
+    background:none; border:none; width:100%;
+    text-align:left;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    transition:color .2s ease;
+  }
+  .why-head:hover{color:var(--orange-deep);}
+  .why-head:hover .ico{transform:scale(1.15);}
+  .ico{transition:transform .2s ease; display:inline-block;}
+  .why-head .label{flex:1;}
+  .why-chevron{
+    font-size:14px;
+    color:var(--muted);
+    transition:transform .25s ease;
+    flex-shrink:0;
+  }
+  .whylist li.open .why-chevron{transform:rotate(180deg);}
+  .why-panel{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease, opacity .25s ease, padding .3s ease;
+    opacity:0;
+    padding:0 4px 0 48px;
+  }
+  .whylist li.open .why-panel{
+    max-height:160px;
+    opacity:1;
+    padding:0 4px 16px 48px;
+  }
+  .why-panel p{
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.55;
+  }
 
   .note{
     background:var(--note);
@@ -353,6 +392,86 @@
   footer .fline{width:70px; height:1px; background:var(--line);}
   footer .heart{color:var(--pink); font-size:16px;}
 
+  /* ---------- CONTACT MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(20,17,12,0.55);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+    opacity:0; visibility:hidden;
+    transition:opacity .25s ease, visibility .25s ease;
+  }
+  .modal-overlay.open{opacity:1; visibility:visible;}
+  .modal-card{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:40px;
+    max-width:440px; width:100%;
+    position:relative;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.35);
+    transform:translateY(16px) scale(.97);
+    transition:transform .3s ease;
+  }
+  .modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
+  .modal-close{
+    position:absolute; top:16px; right:16px;
+    width:36px; height:36px; border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--cream-2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; cursor:pointer; color:var(--ink);
+    transition:background .2s ease, transform .2s ease;
+  }
+  .modal-close:hover{background:var(--orange); transform:rotate(90deg);}
+  .modal-card h3{
+    font-family:'Baloo 2', sans-serif;
+    font-size:26px; font-weight:800; margin-bottom:6px;
+  }
+  .modal-card .modal-sub{
+    font-size:14px; color:var(--muted); margin-bottom:24px;
+  }
+  .formfield{margin-bottom:16px;}
+  .formfield label{
+    display:block; font-size:13px; font-weight:700;
+    letter-spacing:.03em; margin-bottom:6px; color:var(--ink);
+  }
+  .formfield input,
+  .formfield textarea{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .formfield input:focus,
+  .formfield textarea:focus{
+    border-color:var(--orange);
+    box-shadow:0 0 0 3px rgba(245,166,35,0.2);
+  }
+  .formfield textarea{resize:vertical; min-height:90px;}
+  .form-submit{
+    width:100%;
+    background:var(--ink); color:var(--cream);
+    padding:14px 20px; border-radius:100px;
+    font-weight:700; font-size:15px;
+    border:none; cursor:pointer;
+    box-shadow:0 4px 0 var(--orange-deep);
+    transition:transform .15s ease, box-shadow .15s ease;
+    margin-top:6px;
+  }
+  .form-submit:hover{transform:translateY(-2px); box-shadow:0 6px 0 var(--orange-deep);}
+  .form-submit:active{transform:translateY(2px); box-shadow:0 2px 0 var(--orange-deep);}
+  .form-note{
+    font-size:12px; color:var(--muted); margin-top:14px; text-align:center;
+    line-height:1.5;
+  }
+
   /* ---------- RESPONSIVE ---------- */
   @media (max-width:880px){
     .navlinks{display:none;}
@@ -378,6 +497,12 @@
     *{transition:none !important;}
   }
 </style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function(){
+    emailjs.init({ publicKey: "yOppkcbnx6Ao9zXLx" });
+  })();
+</script>
 </head>
 <body>
 
@@ -391,7 +516,7 @@
     </div>
     <div class="navright">
       <button class="theme-toggle" id="themeToggle" aria-label="Sötét / világos mód váltása" title="Sötét / világos mód">🌙</button>
-      <a href="#kapcsolat" class="navcta">Írj nekem →</a>
+      <button class="navcta" id="openContactForm" type="button">Írj nekem →</button>
     </div>
   </div>
 </nav>
@@ -463,12 +588,57 @@
     <div class="whygrid">
       <div>
         <h3>Miért én?</h3>
-        <ul class="whylist">
-          <li><span class="ico">⭐</span> Egyedi megoldások</li>
-          <li><span class="ico">💬</span> Közvetlen kommunikáció</li>
-          <li><span class="ico">💡</span> Kreatív szemlélet</li>
-          <li><span class="ico">❤️</span> Rugalmas hozzáállás</li>
-          <li><span class="ico">⏱️</span> Határidők betartása 😉</li>
+        <ul class="whylist" id="whyList">
+          <li>
+            <button class="why-head" type="button">
+              <span class="ico">⭐</span>
+              <span class="label">Egyedi megoldások</span>
+              <span class="why-chevron">⌄</span>
+            </button>
+            <div class="why-panel">
+              <p>Kreatív, rád szabott ötletek.</p>
+            </div>
+          </li>
+          <li>
+            <button class="why-head" type="button">
+              <span class="ico">💬</span>
+              <span class="label">Közvetlen kommunikáció</span>
+              <span class="why-chevron">⌄</span>
+            </button>
+            <div class="why-panel">
+              <p>Közvetlen mint csak te meg én, és feszengeni sem kell :D</p>
+            </div>
+          </li>
+          <li>
+            <button class="why-head" type="button">
+              <span class="ico">💡</span>
+              <span class="label">Kreatív szemlélet</span>
+              <span class="why-chevron">⌄</span>
+            </button>
+            <div class="why-panel">
+              <p>Nem csak megcsinálom, de szép is lesz.</p>
+            </div>
+          </li>
+          <li>
+            <button class="why-head" type="button">
+              <span class="ico">❤️</span>
+              <span class="label">Rugalmas hozzáállás</span>
+              <span class="why-chevron">⌄</span>
+            </button>
+            <div class="why-panel">
+              <p>Változott az ötlet? Nem gond, alkalmazkodom.</p>
+            </div>
+          </li>
+          <li>
+            <button class="why-head" type="button">
+              <span class="ico">⏱️</span>
+              <span class="label">Határidők betartása 😉</span>
+              <span class="why-chevron">⌄</span>
+            </button>
+            <div class="why-panel">
+              <p>Ha megbeszéltük, úgy lesz.</p>
+            </div>
+          </li>
         </ul>
       </div>
       <div class="note">
@@ -491,8 +661,8 @@
       <span class="rule"></span>
     </div>
     <div class="contactbox">
-      <a href="mailto:solymosiszabi@gmail.com" class="contactitem">
-        <span class="icobubble">✉️</span> solymosiszabi@gmail.com
+      <a href="mailto:kdsweblap@gmail.com" class="contactitem">
+        <span class="icobubble">✉️</span> kdsweblap@gmail.com
       </a>
       <div class="divider"></div>
       <a href="tel:+36303400320" class="contactitem">
@@ -510,6 +680,30 @@
   <span class="fline"></span>
 </footer>
 
+<div class="modal-overlay" id="contactModal">
+  <div class="modal-card">
+    <button class="modal-close" id="closeContactForm" type="button" aria-label="Bezárás">✕</button>
+    <h3>Írj nekem</h3>
+    <p class="modal-sub">Töltsd ki, és nyomj a küldésre.</p>
+    <form id="contactForm">
+      <div class="formfield">
+        <label for="cf-name">Név</label>
+        <input type="text" id="cf-name" name="name" placeholder="Na hogy hívjalak? :P" required>
+      </div>
+      <div class="formfield">
+        <label for="cf-phone">Telefonszám</label>
+        <input type="tel" id="cf-phone" name="phone" placeholder="+36" required>
+      </div>
+      <div class="formfield">
+        <label for="cf-message">Miben segíthetek?</label>
+        <textarea id="cf-message" name="message" placeholder="Meséld el röviden, mire lenne szükséged..." required></textarea>
+      </div>
+      <button class="form-submit" type="submit" id="cf-submit-btn">Elküldés →</button>
+      <p class="form-note" id="cf-status">A gomb elküldi az üzenetet közvetlenül a kdsweblap@gmail.com címre.</p>
+    </form>
+  </div>
+</div>
+
 <script>
   var toggle = document.getElementById('themeToggle');
   function applyIcon(theme){
@@ -523,6 +717,86 @@
     localStorage.setItem('kds-theme', next);
     applyIcon(next);
   });
+</script>
+<script>
+  var whyList = document.getElementById('whyList');
+  if(whyList){
+    var whyItems = whyList.querySelectorAll('li');
+    whyItems.forEach(function(item){
+      var head = item.querySelector('.why-head');
+      head.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        whyItems.forEach(function(other){ other.classList.remove('open'); });
+        if(!isOpen){ item.classList.add('open'); }
+      });
+    });
+  }
+</script>
+<script>
+  var modal = document.getElementById('contactModal');
+  var openBtn = document.getElementById('openContactForm');
+  var closeBtn = document.getElementById('closeContactForm');
+  var form = document.getElementById('contactForm');
+
+  function openModal(){
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if(openBtn){ openBtn.addEventListener('click', openModal); }
+  if(closeBtn){ closeBtn.addEventListener('click', closeModal); }
+  modal.addEventListener('click', function(e){
+    if(e.target === modal){ closeModal(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('open')){ closeModal(); }
+  });
+
+  if(form){
+    var statusEl = document.getElementById('cf-status');
+    var submitBtn = document.getElementById('cf-submit-btn');
+    var defaultStatusText = statusEl.textContent;
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = document.getElementById('cf-name').value.trim();
+      var phone = document.getElementById('cf-phone').value.trim();
+      var message = document.getElementById('cf-message').value.trim();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Küldés...';
+      statusEl.textContent = defaultStatusText;
+      statusEl.style.color = '';
+
+      emailjs.send('service_5qq8vmc', 'template_3w8wka8', {
+        from_name: name,
+        phone: phone,
+        message: message
+      }).then(function(){
+        submitBtn.textContent = 'Elküldve ✓';
+        statusEl.textContent = 'Köszönöm! Hamarosan jelentkezem.';
+        statusEl.style.color = 'var(--orange-deep)';
+        form.reset();
+        setTimeout(function(){
+          closeModal();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Elküldés →';
+          statusEl.textContent = defaultStatusText;
+          statusEl.style.color = '';
+        }, 2200);
+      }, function(err){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Elküldés →';
+        statusEl.textContent = 'Hiba történt a küldéskor, próbáld újra, vagy írj a kdsweblap@gmail.com címre.';
+        statusEl.style.color = '#c0392b';
+        console.error('EmailJS error:', err);
+      });
+    });
+  }
 </script>
 </body>
 </html>
